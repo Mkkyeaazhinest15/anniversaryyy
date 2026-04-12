@@ -8,9 +8,10 @@
 <style>
 body{
   margin:0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family:'Segoe UI',sans-serif;
   text-align:center;
   background:linear-gradient(#ffd6e7,#ffc0cb);
+  overflow:hidden;
 }
 
 /* PAGES */
@@ -22,27 +23,25 @@ button{
   padding:12px 20px;
   margin:10px;
   border:none;
-  border-radius:20px;
-  background:hotpink;
+  border-radius:25px;
+  background:linear-gradient(45deg,hotpink,#ff85a2);
   color:white;
   font-size:16px;
   cursor:pointer;
   position:relative;
   overflow:hidden;
+  transition:0.2s;
 }
+button:hover{transform:scale(1.05);}
 
-/* HEART EFFECT (BUTTON ONLY) */
+/* HEART EFFECT */
 button span{
   position:absolute;
   pointer-events:none;
   animation:float 1s forwards;
 }
-
 @keyframes float{
-  to{
-    transform:translateY(-80px);
-    opacity:0;
-  }
+  to{ transform:translateY(-80px); opacity:0; }
 }
 
 /* CARDS */
@@ -51,18 +50,22 @@ button span{
   padding:20px;
   margin:10px;
   background:white;
-  border-radius:15px;
+  border-radius:20px;
   cursor:pointer;
+  transition:0.3s;
 }
+.card:hover{transform:scale(1.1);}
 
 /* LETTER */
 #letter{
   display:none;
-  background:white;
+  background:#fff0f5;
   margin:20px;
   padding:20px;
-  border-radius:15px;
+  border-radius:20px;
   white-space:pre-line;
+  height:250px;
+  overflow:auto;
 }
 
 /* GAME */
@@ -72,7 +75,7 @@ button span{
   height:400px;
   background:white;
   margin:20px;
-  border-radius:15px;
+  border-radius:20px;
   overflow:hidden;
 }
 
@@ -80,7 +83,7 @@ button span{
   position:absolute;
   bottom:10px;
   left:50%;
-  font-size:30px;
+  font-size:35px;
 }
 
 .penguin{
@@ -88,25 +91,48 @@ button span{
   top:0;
   font-size:25px;
 }
+
+/* ENDING */
+#endingScreen{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:linear-gradient(#ff9ecb,#ffc0cb);
+  color:white;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  text-align:center;
+}
 </style>
 </head>
 
 <body>
 
+<!-- 🎵 MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_946f2c1c63.mp3">
+</audio>
+
+<audio id="gameMusic" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_1c9e4c5a6c.mp3">
+</audio>
+
 <!-- PAGE 1 -->
 <div id="page1" class="page active">
 <h2>Do you still love me, my Handsome Dinosaur? 🥺💖</h2>
 <button onclick="goToCards(event)">YES 💖</button>
-<button onclick="noClick(event)">NO 😭</button>
+<button id="noBtn" onmouseover="runAway()" ontouchstart="runAway()">NO 😭</button>
 </div>
 
 <!-- PAGE 2 -->
 <div id="cardsPage" class="page">
 <h3>Choose one 💌</h3>
-
 <div class="card" onclick="showLetter()">💌 Open Letter</div>
 <div class="card" onclick="startGame()">🎮 Play Game</div>
-
 <br>
 <button onclick="goBack()">Back</button>
 </div>
@@ -123,144 +149,178 @@ button span{
 <div id="player">🦖</div>
 </div>
 
+<!-- ENDING -->
+<div id="endingScreen">
+<h1>I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND 💖</h1>
+<p>Thank you for choosing me every day 🥺💖</p>
+<button onclick="restart()">Start Again 🔄</button>
+</div>
+
 <script>
 // 💖 HEART EFFECT
 function heartEffect(e){
-let btn = e.currentTarget;
-
+let btn=e.currentTarget;
 for(let i=0;i<5;i++){
-let h = document.createElement("span");
-h.innerHTML = "💖";
-h.style.left = Math.random()*80 + "px";
-h.style.top = "10px";
+let h=document.createElement("span");
+h.innerHTML="💖";
+h.style.left=Math.random()*80+"px";
 btn.appendChild(h);
-
 setTimeout(()=>h.remove(),1000);
 }
+}
+
+// 🎵 FADE MUSIC
+function fadeSwitch(from,to){
+let fadeOut=setInterval(()=>{
+if(from.volume>0.05){
+from.volume-=0.05;
+}else{
+from.pause();
+clearInterval(fadeOut);
+
+to.currentTime=0;
+to.volume=0;
+to.play();
+
+let fadeIn=setInterval(()=>{
+if(to.volume<0.5){
+to.volume+=0.05;
+}else clearInterval(fadeIn);
+},100);
+}
+},100);
 }
 
 // NAVIGATION
 function goToCards(e){
 heartEffect(e);
-document.getElementById("page1").classList.remove("active");
-document.getElementById("cardsPage").classList.add("active");
+bgMusic.volume=0.5;
+bgMusic.play().catch(()=>{});
+page1.classList.remove("active");
+cardsPage.classList.add("active");
 }
 
 function goBack(){
-document.getElementById("cardsPage").classList.remove("active");
-document.getElementById("page1").classList.add("active");
+cardsPage.classList.remove("active");
+page1.classList.add("active");
 }
 
-function noClick(e){
-heartEffect(e);
-alert("😢 bawal yan, love mo ako");
+// 😏 RUNAWAY NO
+let size=1;
+function runAway(){
+noBtn.style.position="absolute";
+noBtn.style.left=Math.random()*(window.innerWidth-100)+"px";
+noBtn.style.top=Math.random()*(window.innerHeight-50)+"px";
+
+size-=0.1;
+if(size<0.4) size=0.4;
+noBtn.style.transform="scale("+size+")";
 }
 
-// 💌 LETTER (EXAGGERATED + VIBEY)
+// 💌 LETTER WITH AUTO SCROLL
 function showLetter(){
-let text = `Hi my Handsomest Dinosaur 🦖💖
+let text=`Hi my Handsomest Dinosaur 🦖💖
 
-I don’t even know where to start because every time I try to put into words how much I love you… it always feels kulang 😭💖
+I don’t even know where to start because every time I try to explain how much I love you… it never feels enough 😭💖
 
-From the very first moment I saw you dancing, parang time literally paused for me. Like hello?? who allowed you to be that attractive??? 😳
+From the very first moment I saw you dancing, parang everything just paused. Like seriously… who allowed you to be that attractive??? 😳✨
 
-There’s just something about you—the way you move, the way you smile, the way you exist—that makes my heart go “ah yes, this is my person” 💖
+There was something about you—your energy, your presence, the way you move, the way you smile—that made my heart quietly say, “ah… siya na.” 💖
 
-You don’t even realize how much you mean to me sometimes. You’re not just someone I love… you’re someone I choose. Every single day. Kahit mahirap, kahit nakakapagod, kahit may misunderstandings—we still find our way back to each other.
+And hanggang ngayon, ganon pa rin. You’re still the person I look at and think, “ang swerte ko.” 🥺💗
 
-And that’s my favorite thing about us 🥺
+You’re not just someone I love… you’re someone I choose. Every single day.
 
-I love our hugs, our clingy moments, our random laughs, even our kulit moments na wala namang sense 😭💖
-
-You make everything feel lighter. You make me feel safe. You make me feel loved in ways I didn’t even know I needed.
-
-If I could choose again in another lifetime, I would still choose you. Over and over again. No hesitation. No doubts.
+If I had the chance to choose again in another lifetime… I would still choose you. Over and over again.
 
 I LOVE YOU SAUR MUCH 🦖💖  
 to infinity and beyond ♾️🚀
 
 — your little ms. lagtok 💗`;
 
-let i = 0;
-let box = document.getElementById("letter");
-let txt = document.getElementById("letterText");
-
-box.style.display = "block";
-txt.innerHTML = "";
+let i=0;
+letter.style.display="block";
+letterText.innerHTML="";
 
 function type(){
-if(i < text.length){
-txt.innerHTML += text.charAt(i);
+if(i<text.length){
+letterText.innerHTML+=text.charAt(i);
 i++;
+
+// AUTO SCROLL 🔥
+letter.scrollTop = letter.scrollHeight;
+
 setTimeout(type,20);
-}
-}
+}}
 type();
 }
 
-function closeLetter(){
-document.getElementById("letter").style.display="none";
-}
+function closeLetter(){ letter.style.display="none"; }
 
-// 🎮 GAME (DINO + PENGUIN)
-let score = 0;
-let gameRunning = false;
+// 🎮 GAME
+let score=0,running=false;
 
 function startGame(){
-document.getElementById("gameArea").style.display="block";
-score = 0;
-gameRunning = true;
-document.getElementById("score").innerHTML="Score: 0";
+gameArea.style.display="block";
+score=0;
+running=true;
+updateScore();
+
+fadeSwitch(bgMusic,gameMusic);
 }
 
-// MOVE PLAYER
+function updateScore(){
+scoreDisplay.innerHTML="Score: "+score;
+}
+
 document.addEventListener("touchmove",e=>{
-let p = document.getElementById("player");
-p.style.left = (e.touches[0].clientX - 15) + "px";
+player.style.left=(e.touches[0].clientX-20)+"px";
 });
 
-// SPAWN PENGUIN
 setInterval(()=>{
-if(!gameRunning) return;
+if(!running) return;
 
-let area = document.getElementById("gameArea");
-
-let p = document.createElement("div");
+let p=document.createElement("div");
 p.className="penguin";
 p.innerHTML="🐧";
 p.style.left=Math.random()*90+"%";
+gameArea.appendChild(p);
 
-area.appendChild(p);
-
-let fall = setInterval(()=>{
-p.style.top = (p.offsetTop + 5) + "px";
-
-let player = document.getElementById("player");
+let fall=setInterval(()=>{
+p.style.top=(p.offsetTop+5)+"px";
 
 if(
-p.offsetTop > 330 &&
-p.offsetLeft > player.offsetLeft - 30 &&
-p.offsetLeft < player.offsetLeft + 30
+p.offsetTop>330 &&
+p.offsetLeft>player.offsetLeft-30 &&
+p.offsetLeft<player.offsetLeft+30
 ){
 score++;
-document.getElementById("score").innerHTML="Score: " + score;
+updateScore();
 p.remove();
 clearInterval(fall);
 
-if(score == 5){
-gameRunning = false;
-alert("You win my heart 💖");
+if(score==5){
+running=false;
+fadeSwitch(gameMusic,bgMusic);
+
+gameArea.style.display="none";
+endingScreen.style.display="flex";
 }
 }
 
-if(p.offsetTop > 400){
+if(p.offsetTop>400){
 p.remove();
 clearInterval(fall);
 }
 },50);
 
 },800);
+
+// 🔄 RESTART
+function restart(){
+location.reload();
+}
 </script>
 
 </body>
-  </html>
+</html>
