@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For my Handsome Dinosaur 🦖💖</title>
+
+<style>
+body{
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  text-align:center;
+  background:linear-gradient(#ffd6e7,#ffc0cb);
+}
+
+/* PAGES */
+.page{display:none;}
+.active{display:block;}
+
+/* BUTTON */
+button{
+  padding:12px 20px;
+  margin:10px;
+  border:none;
+  border-radius:20px;
+  background:hotpink;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+}
+
+/* HEART EFFECT (BUTTON ONLY) */
+button span{
+  position:absolute;
+  pointer-events:none;
+  animation:float 1s forwards;
+}
+
+@keyframes float{
+  to{
+    transform:translateY(-80px);
+    opacity:0;
+  }
+}
+
+/* CARDS */
+.card{
+  display:inline-block;
+  padding:20px;
+  margin:10px;
+  background:white;
+  border-radius:15px;
+  cursor:pointer;
+}
+
+/* LETTER */
+#letter{
+  display:none;
+  background:white;
+  margin:20px;
+  padding:20px;
+  border-radius:15px;
+  white-space:pre-line;
+}
+
+/* GAME */
+#gameArea{
+  display:none;
+  position:relative;
+  height:400px;
+  background:white;
+  margin:20px;
+  border-radius:15px;
+  overflow:hidden;
+}
+
+#player{
+  position:absolute;
+  bottom:10px;
+  left:50%;
+  font-size:30px;
+}
+
+.penguin{
+  position:absolute;
+  top:0;
+  font-size:25px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div id="page1" class="page active">
+<h2>Do you still love me, my Handsome Dinosaur? 🥺💖</h2>
+<button onclick="goToCards(event)">YES 💖</button>
+<button onclick="noClick(event)">NO 😭</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="cardsPage" class="page">
+<h3>Choose one 💌</h3>
+
+<div class="card" onclick="showLetter()">💌 Open Letter</div>
+<div class="card" onclick="startGame()">🎮 Play Game</div>
+
+<br>
+<button onclick="goBack()">Back</button>
+</div>
+
+<!-- LETTER -->
+<div id="letter">
+<p id="letterText"></p>
+<button onclick="closeLetter()">Close ❌</button>
+</div>
+
+<!-- GAME -->
+<div id="gameArea">
+<h3 id="score">Score: 0</h3>
+<div id="player">🦖</div>
+</div>
+
+<script>
+// 💖 HEART EFFECT
+function heartEffect(e){
+let btn = e.currentTarget;
+
+for(let i=0;i<5;i++){
+let h = document.createElement("span");
+h.innerHTML = "💖";
+h.style.left = Math.random()*80 + "px";
+h.style.top = "10px";
+btn.appendChild(h);
+
+setTimeout(()=>h.remove(),1000);
+}
+}
+
+// NAVIGATION
+function goToCards(e){
+heartEffect(e);
+document.getElementById("page1").classList.remove("active");
+document.getElementById("cardsPage").classList.add("active");
+}
+
+function goBack(){
+document.getElementById("cardsPage").classList.remove("active");
+document.getElementById("page1").classList.add("active");
+}
+
+function noClick(e){
+heartEffect(e);
+alert("😢 bawal yan, love mo ako");
+}
+
+// 💌 LETTER (EXAGGERATED + VIBEY)
+function showLetter(){
+let text = `Hi my Handsomest Dinosaur 🦖💖
+
+I don’t even know where to start because every time I try to put into words how much I love you… it always feels kulang 😭💖
+
+From the very first moment I saw you dancing, parang time literally paused for me. Like hello?? who allowed you to be that attractive??? 😳
+
+There’s just something about you—the way you move, the way you smile, the way you exist—that makes my heart go “ah yes, this is my person” 💖
+
+You don’t even realize how much you mean to me sometimes. You’re not just someone I love… you’re someone I choose. Every single day. Kahit mahirap, kahit nakakapagod, kahit may misunderstandings—we still find our way back to each other.
+
+And that’s my favorite thing about us 🥺
+
+I love our hugs, our clingy moments, our random laughs, even our kulit moments na wala namang sense 😭💖
+
+You make everything feel lighter. You make me feel safe. You make me feel loved in ways I didn’t even know I needed.
+
+If I could choose again in another lifetime, I would still choose you. Over and over again. No hesitation. No doubts.
+
+I LOVE YOU SAUR MUCH 🦖💖  
+to infinity and beyond ♾️🚀
+
+— your little ms. lagtok 💗`;
+
+let i = 0;
+let box = document.getElementById("letter");
+let txt = document.getElementById("letterText");
+
+box.style.display = "block";
+txt.innerHTML = "";
+
+function type(){
+if(i < text.length){
+txt.innerHTML += text.charAt(i);
+i++;
+setTimeout(type,20);
+}
+}
+type();
+}
+
+function closeLetter(){
+document.getElementById("letter").style.display="none";
+}
+
+// 🎮 GAME (DINO + PENGUIN)
+let score = 0;
+let gameRunning = false;
+
+function startGame(){
+document.getElementById("gameArea").style.display="block";
+score = 0;
+gameRunning = true;
+document.getElementById("score").innerHTML="Score: 0";
+}
+
+// MOVE PLAYER
+document.addEventListener("touchmove",e=>{
+let p = document.getElementById("player");
+p.style.left = (e.touches[0].clientX - 15) + "px";
+});
+
+// SPAWN PENGUIN
+setInterval(()=>{
+if(!gameRunning) return;
+
+let area = document.getElementById("gameArea");
+
+let p = document.createElement("div");
+p.className="penguin";
+p.innerHTML="🐧";
+p.style.left=Math.random()*90+"%";
+
+area.appendChild(p);
+
+let fall = setInterval(()=>{
+p.style.top = (p.offsetTop + 5) + "px";
+
+let player = document.getElementById("player");
+
+if(
+p.offsetTop > 330 &&
+p.offsetLeft > player.offsetLeft - 30 &&
+p.offsetLeft < player.offsetLeft + 30
+){
+score++;
+document.getElementById("score").innerHTML="Score: " + score;
+p.remove();
+clearInterval(fall);
+
+if(score == 5){
+gameRunning = false;
+alert("You win my heart 💖");
+}
+}
+
+if(p.offsetTop > 400){
+p.remove();
+clearInterval(fall);
+}
+},50);
+
+},800);
+</script>
+
+</body>
+  </html>
