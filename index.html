@@ -13,12 +13,9 @@ body{
   background:linear-gradient(#ffd6e7,#ffc0cb);
   overflow:hidden;
 }
-
-/* PAGES */
 .page{display:none;}
 .active{display:block;}
 
-/* BUTTON */
 button{
   padding:12px 20px;
   margin:10px;
@@ -26,25 +23,9 @@ button{
   border-radius:25px;
   background:linear-gradient(45deg,hotpink,#ff85a2);
   color:white;
-  font-size:16px;
   cursor:pointer;
-  position:relative;
-  overflow:hidden;
-  transition:0.2s;
-}
-button:hover{transform:scale(1.05);}
-
-/* HEART EFFECT */
-button span{
-  position:absolute;
-  pointer-events:none;
-  animation:float 1s forwards;
-}
-@keyframes float{
-  to{ transform:translateY(-80px); opacity:0; }
 }
 
-/* CARDS */
 .card{
   display:inline-block;
   padding:20px;
@@ -52,23 +33,19 @@ button span{
   background:white;
   border-radius:20px;
   cursor:pointer;
-  transition:0.3s;
 }
-.card:hover{transform:scale(1.1);}
 
-/* LETTER */
 #letter{
   display:none;
   background:#fff0f5;
   margin:20px;
   padding:20px;
   border-radius:20px;
-  white-space:pre-line;
   height:250px;
   overflow:auto;
+  white-space:pre-line;
 }
 
-/* GAME */
 #gameArea{
   display:none;
   position:relative;
@@ -92,7 +69,6 @@ button span{
   font-size:25px;
 }
 
-/* ENDING */
 #endingScreen{
   display:none;
   position:fixed;
@@ -105,26 +81,25 @@ button span{
   justify-content:center;
   align-items:center;
   flex-direction:column;
-  text-align:center;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎵 MUSIC -->
+<!-- 🎵 MUSIC (BRUNO MARS VIBE) -->
 <audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_946f2c1c63.mp3">
+  <source src="https://cdn.pixabay.com/download/audio/2023/04/19/audio_6f0c8d9c5e.mp3?filename=romantic-background-145823.mp3">
 </audio>
 
 <audio id="gameMusic" loop>
-  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_1c9e4c5a6c.mp3">
+  <source src="https://cdn.pixabay.com/download/audio/2022/10/30/audio_946f2c1c63.mp3?filename=funny-game-112191.mp3">
 </audio>
 
 <!-- PAGE 1 -->
 <div id="page1" class="page active">
 <h2>Do you still love me, my Handsome Dinosaur? 🥺💖</h2>
-<button onclick="goToCards(event)">YES 💖</button>
+<button onclick="startSite()">YES 💖</button>
 <button id="noBtn" onmouseover="runAway()" ontouchstart="runAway()">NO 😭</button>
 </div>
 
@@ -133,8 +108,6 @@ button span{
 <h3>Choose one 💌</h3>
 <div class="card" onclick="showLetter()">💌 Open Letter</div>
 <div class="card" onclick="startGame()">🎮 Play Game</div>
-<br>
-<button onclick="goBack()">Back</button>
 </div>
 
 <!-- LETTER -->
@@ -151,90 +124,36 @@ button span{
 
 <!-- ENDING -->
 <div id="endingScreen">
-<h1>I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND 💖</h1>
+<h1>I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖</h1>
 <p>Thank you for choosing me every day 🥺💖</p>
-<button onclick="restart()">Start Again 🔄</button>
+<button onclick="openYT()">🎵 Our Song</button>
+<button onclick="location.reload()">Start Again 🔄</button>
 </div>
 
 <script>
-// 💖 HEART EFFECT
-function heartEffect(e){
-let btn=e.currentTarget;
-for(let i=0;i<5;i++){
-let h=document.createElement("span");
-h.innerHTML="💖";
-h.style.left=Math.random()*80+"px";
-btn.appendChild(h);
-setTimeout(()=>h.remove(),1000);
-}
-}
 
-// 🎵 FADE MUSIC
-function fadeSwitch(from,to){
-let fadeOut=setInterval(()=>{
-if(from.volume>0.05){
-from.volume-=0.05;
-}else{
-from.pause();
-clearInterval(fadeOut);
-
-to.currentTime=0;
-to.volume=0;
-to.play();
-
-let fadeIn=setInterval(()=>{
-if(to.volume<0.5){
-to.volume+=0.05;
-}else clearInterval(fadeIn);
-},100);
-}
-},100);
-}
-
-// NAVIGATION
-function goToCards(e){
-heartEffect(e);
+// START
+function startSite(){
 bgMusic.volume=0.5;
 bgMusic.play().catch(()=>{});
 page1.classList.remove("active");
 cardsPage.classList.add("active");
 }
 
-function goBack(){
-cardsPage.classList.remove("active");
-page1.classList.add("active");
-}
-
-// 😏 RUNAWAY NO
-let size=1;
+// RUNAWAY
 function runAway(){
 noBtn.style.position="absolute";
 noBtn.style.left=Math.random()*(window.innerWidth-100)+"px";
 noBtn.style.top=Math.random()*(window.innerHeight-50)+"px";
-
-size-=0.1;
-if(size<0.4) size=0.4;
-noBtn.style.transform="scale("+size+")";
 }
 
-// 💌 LETTER WITH AUTO SCROLL
+// LETTER
 function showLetter(){
 let text=`Hi my Handsomest Dinosaur 🦖💖
 
-I don’t even know where to start because every time I try to explain how much I love you… it never feels enough 😭💖
+I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖
 
-From the very first moment I saw you dancing, parang everything just paused. Like seriously… who allowed you to be that attractive??? 😳✨
-
-There was something about you—your energy, your presence, the way you move, the way you smile—that made my heart quietly say, “ah… siya na.” 💖
-
-And hanggang ngayon, ganon pa rin. You’re still the person I look at and think, “ang swerte ko.” 🥺💗
-
-You’re not just someone I love… you’re someone I choose. Every single day.
-
-If I had the chance to choose again in another lifetime… I would still choose you. Over and over again.
-
-I LOVE YOU SAUR MUCH 🦖💖  
-to infinity and beyond ♾️🚀
+You are my favorite person. Always.
 
 — your little ms. lagtok 💗`;
 
@@ -245,11 +164,8 @@ letterText.innerHTML="";
 function type(){
 if(i<text.length){
 letterText.innerHTML+=text.charAt(i);
+letter.scrollTop=letter.scrollHeight;
 i++;
-
-// AUTO SCROLL 🔥
-letter.scrollTop = letter.scrollHeight;
-
 setTimeout(type,20);
 }}
 type();
@@ -257,7 +173,7 @@ type();
 
 function closeLetter(){ letter.style.display="none"; }
 
-// 🎮 GAME
+// GAME
 let score=0,running=false;
 
 function startGame(){
@@ -266,13 +182,17 @@ score=0;
 running=true;
 updateScore();
 
-fadeSwitch(bgMusic,gameMusic);
+bgMusic.pause();
+gameMusic.play();
 }
 
 function updateScore(){
 scoreDisplay.innerHTML="Score: "+score;
 }
 
+document.addEventListener("mousemove",e=>{
+player.style.left=(e.clientX-20)+"px";
+});
 document.addEventListener("touchmove",e=>{
 player.style.left=(e.touches[0].clientX-20)+"px";
 });
@@ -289,10 +209,13 @@ gameArea.appendChild(p);
 let fall=setInterval(()=>{
 p.style.top=(p.offsetTop+5)+"px";
 
+let playerRect=player.getBoundingClientRect();
+let pRect=p.getBoundingClientRect();
+
 if(
-p.offsetTop>330 &&
-p.offsetLeft>player.offsetLeft-30 &&
-p.offsetLeft<player.offsetLeft+30
+pRect.bottom>=playerRect.top &&
+pRect.left<playerRect.right &&
+pRect.right>playerRect.left
 ){
 score++;
 updateScore();
@@ -301,7 +224,8 @@ clearInterval(fall);
 
 if(score==5){
 running=false;
-fadeSwitch(gameMusic,bgMusic);
+gameMusic.pause();
+bgMusic.play();
 
 gameArea.style.display="none";
 endingScreen.style.display="flex";
@@ -312,14 +236,15 @@ if(p.offsetTop>400){
 p.remove();
 clearInterval(fall);
 }
-},50);
+},30);
 
 },800);
 
-// 🔄 RESTART
-function restart(){
-location.reload();
+// 🎵 YOUTUBE SONG
+function openYT(){
+window.open("https://www.youtube.com/watch?v=450p7goxZqg");
 }
+
 </script>
 
 </body>
