@@ -13,9 +13,22 @@ body{
   background:linear-gradient(#ffd6e7,#ffc0cb);
   overflow:hidden;
 }
-.page{display:none;}
-.active{display:block;}
 
+/* FLOATING HEARTS */
+.heart{
+  position:fixed;
+  animation:floatUp 6s linear infinite;
+}
+@keyframes floatUp{
+  0%{transform:translateY(100vh) scale(0);}
+  100%{transform:translateY(-10vh) scale(1.5);}
+}
+
+/* PAGES */
+.page{display:none;opacity:0;transition:0.5s;}
+.active{display:block;opacity:1;}
+
+/* BUTTON */
 button{
   padding:12px 20px;
   margin:10px;
@@ -25,27 +38,59 @@ button{
   color:white;
   cursor:pointer;
 }
+button:hover{transform:scale(1.1);}
 
+/* CARDS */
 .card{
   display:inline-block;
-  padding:20px;
-  margin:10px;
+  padding:25px;
+  margin:15px;
   background:white;
   border-radius:20px;
   cursor:pointer;
 }
 
-#letter{
-  display:none;
+/* BOOK LETTER */
+.book{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  width:300px;
+  height:350px;
+  display:flex;
+  perspective:1000px;
+  z-index:999;
+  transition:0.5s;
+}
+.book.open{
+  transform:translate(-50%,-50%) scale(1);
+}
+.pageBook{
+  width:50%;
+  height:100%;
   background:#fff0f5;
-  margin:20px;
-  padding:20px;
-  border-radius:20px;
-  height:250px;
+  border-radius:10px;
+  box-shadow:0 10px 20px rgba(0,0,0,0.3);
+}
+.left{
+  transform-origin:right;
+  background:linear-gradient(#ffc0cb,#ff9ecb);
+}
+.book.open .left{
+  animation:openPage 0.8s forwards;
+}
+@keyframes openPage{
+  from{transform:rotateY(0);}
+  to{transform:rotateY(-180deg);}
+}
+.right{
+  padding:15px;
   overflow:auto;
-  white-space:pre-line;
+  font-size:14px;
 }
 
+/* GAME */
 #gameArea{
   display:none;
   position:relative;
@@ -53,27 +98,46 @@ button{
   background:white;
   margin:20px;
   border-radius:20px;
-  overflow:hidden;
 }
-
 #player{
   position:absolute;
   bottom:10px;
   left:50%;
-  font-size:35px;
+  font-size:40px;
 }
-
 .penguin{
   position:absolute;
   top:0;
-  font-size:25px;
 }
 
+/* HUG */
+#hugScreen{
+  display:none;
+  position:fixed;
+  top:0;
+  width:100%;
+  height:100%;
+  background:radial-gradient(circle,#ffb6c1,#ff69b4);
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  color:white;
+}
+#hugEmoji{
+  font-size:120px;
+  animation:heartbeat 1s infinite;
+}
+@keyframes heartbeat{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.2);}
+  100%{transform:scale(1);}
+}
+
+/* END */
 #endingScreen{
   display:none;
   position:fixed;
   top:0;
-  left:0;
   width:100%;
   height:100%;
   background:linear-gradient(#ff9ecb,#ffc0cb);
@@ -87,119 +151,124 @@ button{
 
 <body>
 
-<!-- 🎵 MUSIC (BRUNO MARS VIBE) -->
 <audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2023/04/19/audio_6f0c8d9c5e.mp3?filename=romantic-background-145823.mp3">
-</audio>
-
-<audio id="gameMusic" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/10/30/audio_946f2c1c63.mp3?filename=funny-game-112191.mp3">
+<source src="https://cdn.pixabay.com/download/audio/2023/04/19/audio_6f0c8d9c5e.mp3">
 </audio>
 
 <!-- PAGE 1 -->
 <div id="page1" class="page active">
 <h2>Do you still love me, my Handsome Dinosaur? 🥺💖</h2>
 <button onclick="startSite()">YES 💖</button>
-<button id="noBtn" onmouseover="runAway()" ontouchstart="runAway()">NO 😭</button>
+<button id="noBtn" onmouseover="runAway()">NO 😭</button>
 </div>
 
-<!-- PAGE 2 -->
+<!-- MENU -->
 <div id="cardsPage" class="page">
 <h3>Choose one 💌</h3>
-<div class="card" onclick="showLetter()">💌 Open Letter</div>
-<div class="card" onclick="startGame()">🎮 Play Game</div>
+<div class="card" onclick="showLetter()">💌 Open Love Letter</div>
+<div class="card" onclick="startGame()">🎮 Game</div>
+<div class="card" onclick="hugStart()">🤗 Hug Me</div>
 </div>
 
-<!-- LETTER -->
-<div id="letter">
-<p id="letterText"></p>
-<button onclick="closeLetter()">Close ❌</button>
+<!-- BOOK -->
+<div id="book" class="book">
+  <div class="pageBook left"></div>
+  <div class="pageBook right">
+    <div id="letterText"></div>
+    <button onclick="closeBook()">Close ❌</button>
+  </div>
 </div>
 
 <!-- GAME -->
 <div id="gameArea">
-<h3 id="score">Score: 0</h3>
+<h3 id="scoreDisplay">Score: 0</h3>
 <div id="player">🦖</div>
 </div>
 
-<!-- ENDING -->
+<!-- HUG -->
+<div id="hugScreen">
+<h1 id="hugEmoji">🫂</h1>
+<p id="hugText">Hold to feel my hug 🥺💖</p>
+</div>
+
+<!-- END -->
 <div id="endingScreen">
 <h1>I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖</h1>
-<p>Thank you for choosing me every day 🥺💖</p>
-<button onclick="openYT()">🎵 Our Song</button>
-<button onclick="location.reload()">Start Again 🔄</button>
+<button onclick="location.reload()">Restart</button>
 </div>
 
 <script>
 
+/* FLOAT HEARTS */
+setInterval(()=>{
+let h=document.createElement("div");
+h.className="heart";
+h.innerHTML="💖";
+h.style.left=Math.random()*100+"%";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),6000);
+},500);
+
 // START
 function startSite(){
-bgMusic.volume=0.5;
 bgMusic.play().catch(()=>{});
 page1.classList.remove("active");
 cardsPage.classList.add("active");
 }
 
-// RUNAWAY
+// RUN BUTTON
 function runAway(){
 noBtn.style.position="absolute";
-noBtn.style.left=Math.random()*(window.innerWidth-100)+"px";
-noBtn.style.top=Math.random()*(window.innerHeight-50)+"px";
+noBtn.style.left=Math.random()*90+"%";
+noBtn.style.top=Math.random()*90+"%";
 }
 
-// LETTER
+// BOOK LETTER
 function showLetter(){
+book.classList.add("open");
+
 let text=`Hi my Handsomest Dinosaur 🦖💖
 
 I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖
 
-You are my favorite person. Always.
+You make everything feel lighter, warmer, and happier.
+Even the smallest moments with you mean so much to me.
 
-— your little ms. lagtok 💗`;
+You are my comfort, my safe place,
+and the one I always choose—every single day.
+
+Thank you for loving me the way you do 🥺💗
+
+Forever yours,
+your little ms. lagtok 💖`;
 
 let i=0;
-letter.style.display="block";
 letterText.innerHTML="";
-
 function type(){
 if(i<text.length){
-letterText.innerHTML+=text.charAt(i);
-letter.scrollTop=letter.scrollHeight;
-i++;
+letterText.innerHTML+=text[i++];
 setTimeout(type,20);
 }}
 type();
 }
-
-function closeLetter(){ letter.style.display="none"; }
+function closeBook(){book.classList.remove("open");}
 
 // GAME
 let score=0,running=false;
-
 function startGame(){
 gameArea.style.display="block";
 score=0;
 running=true;
 updateScore();
-
-bgMusic.pause();
-gameMusic.play();
 }
-
 function updateScore(){
 scoreDisplay.innerHTML="Score: "+score;
 }
-
 document.addEventListener("mousemove",e=>{
 player.style.left=(e.clientX-20)+"px";
 });
-document.addEventListener("touchmove",e=>{
-player.style.left=(e.touches[0].clientX-20)+"px";
-});
-
 setInterval(()=>{
-if(!running) return;
-
+if(!running)return;
 let p=document.createElement("div");
 p.className="penguin";
 p.innerHTML="🐧";
@@ -209,40 +278,60 @@ gameArea.appendChild(p);
 let fall=setInterval(()=>{
 p.style.top=(p.offsetTop+5)+"px";
 
-let playerRect=player.getBoundingClientRect();
-let pRect=p.getBoundingClientRect();
+let pr=player.getBoundingClientRect();
+let rr=p.getBoundingClientRect();
 
-if(
-pRect.bottom>=playerRect.top &&
-pRect.left<playerRect.right &&
-pRect.right>playerRect.left
-){
-score++;
-updateScore();
-p.remove();
-clearInterval(fall);
-
+if(rr.bottom>=pr.top && rr.left<pr.right && rr.right>pr.left){
+score++;updateScore();p.remove();clearInterval(fall);
 if(score==5){
 running=false;
-gameMusic.pause();
-bgMusic.play();
-
 gameArea.style.display="none";
 endingScreen.style.display="flex";
 }
 }
 
-if(p.offsetTop>400){
-p.remove();
-clearInterval(fall);
-}
+if(p.offsetTop>400){p.remove();clearInterval(fall);}
 },30);
-
 },800);
 
-// 🎵 YOUTUBE SONG
-function openYT(){
-window.open("https://www.youtube.com/watch?v=450p7goxZqg");
+// HUG
+let holdTimer;
+
+function hugStart(){
+hugScreen.style.display="flex";
+
+document.body.addEventListener("mousedown",startHold);
+document.body.addEventListener("mouseup",endHold);
+document.body.addEventListener("touchstart",startHold);
+document.body.addEventListener("touchend",endHold);
+}
+
+function startHold(){
+hugText.innerHTML="Hugging you tighter... 🥺💖";
+
+if(navigator.vibrate){
+navigator.vibrate([100,50,100]);
+}
+
+holdTimer=setInterval(()=>spawnHearts(),200);
+}
+
+function endHold(){
+clearInterval(holdTimer);
+hugText.innerHTML="I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖";
+
+setTimeout(()=>hugScreen.style.display="none",1500);
+}
+
+function spawnHearts(){
+let h=document.createElement("div");
+h.innerHTML="💖";
+h.style.position="fixed";
+h.style.left=Math.random()*100+"%";
+h.style.top="100%";
+h.style.animation="floatUp 3s linear";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),3000);
 }
 
 </script>
