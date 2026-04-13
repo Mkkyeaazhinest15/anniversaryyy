@@ -145,19 +145,6 @@ button{
 
 <button onclick="startGame()">Start Game</button>
 
-<!-- MUSIC -->
-<audio id="bgMusic" loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
-</audio>
-
-<audio id="catchSound">
-  <source src="https://www.soundjay.com/buttons/sounds/button-16.mp3">
-</audio>
-
-<audio id="failSound">
-  <source src="https://www.soundjay.com/button/beep-10.mp3">
-</audio>
-
 <script>
 let player = document.getElementById("player");
 let gameArea = document.getElementById("gameArea");
@@ -165,7 +152,7 @@ let scoreDisplay = document.getElementById("score");
 let livesDisplay = document.getElementById("lives");
 
 let score = 0;
-let lives = 3;
+let lives = 15;
 let speed = 2;
 let gameRunning = false;
 
@@ -302,10 +289,6 @@ function gameOver(){
 </head>
 
 <body>
-
-<audio id="bgMusic" loop>
-<source src="https://cdn.pixabay.com/download/audio/2023/04/19/audio_6f0c8d9c5e.mp3">
-</audio>
 
 <!-- START -->
 <div id="page1" class="page active">
