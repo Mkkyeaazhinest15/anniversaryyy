@@ -101,25 +101,171 @@ button{
 
 /* GAME */
 #gameArea{
-  display:none;
+  display:block;
   position:relative;
   height:350px;
+  width:300px;
   background:white;
-  margin:15px;
+  margin:15px auto;
   border-radius:20px;
   overflow:hidden;
+  border:3px solid black;
 }
+
 #player{
   position:absolute;
   bottom:10px;
   left:50%;
+  transform:translateX(-50%);
   font-size:35px;
+  transition:0.1s;
 }
+
 .penguin{
   position:absolute;
   top:0;
+  font-size:30px;
 }
 
+#score, #lives{
+  font-size:20px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🐧 Catch Game</h2>
+<div id="score">Score: 0</div>
+<div id="lives">Lives: 3</div>
+
+<div id="gameArea">
+  <div id="player">🧺</div>
+</div>
+
+<button onclick="startGame()">Start Game</button>
+
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+</audio>
+
+<audio id="catchSound">
+  <source src="https://www.soundjay.com/buttons/sounds/button-16.mp3">
+</audio>
+
+<audio id="failSound">
+  <source src="https://www.soundjay.com/button/beep-10.mp3">
+</audio>
+
+<script>
+let player = document.getElementById("player");
+let gameArea = document.getElementById("gameArea");
+let scoreDisplay = document.getElementById("score");
+let livesDisplay = document.getElementById("lives");
+
+let score = 0;
+let lives = 3;
+let speed = 2;
+let gameRunning = false;
+
+// MOVE PLAYER
+document.addEventListener("mousemove", e=>{
+  let rect = gameArea.getBoundingClientRect();
+  let x = e.clientX - rect.left;
+  player.style.left = x + "px";
+});
+
+// START GAME
+function startGame(){
+  score = 0;
+  lives = 3;
+  speed = 2;
+  gameRunning = true;
+
+  document.getElementById("bgMusic").play();
+
+  scoreDisplay.innerHTML = "Score: " + score;
+  livesDisplay.innerHTML = "Lives: " + lives;
+
+  spawnPenguin();
+}
+
+// SPAWN OBJECTS
+function spawnPenguin(){
+  if(!gameRunning) return;
+
+  let penguin = document.createElement("div");
+  penguin.classList.add("penguin");
+  penguin.innerHTML = "🐧";
+
+  penguin.style.left = Math.random()*260 + "px";
+  gameArea.appendChild(penguin);
+
+  fall(penguin);
+
+  setTimeout(spawnPenguin, 1000 - speed*100);
+}
+
+// FALLING LOGIC
+function fall(penguin){
+  let pos = 0;
+
+  let interval = setInterval(()=>{
+    if(!gameRunning){
+      clearInterval(interval);
+      penguin.remove();
+      return;
+    }
+
+    pos += speed;
+    penguin.style.top = pos + "px";
+
+    let playerRect = player.getBoundingClientRect();
+    let penguinRect = penguin.getBoundingClientRect();
+
+    // COLLISION
+    if(
+      penguinRect.bottom > playerRect.top &&
+      penguinRect.left < playerRect.right &&
+      penguinRect.right > playerRect.left
+    ){
+      document.getElementById("catchSound").play();
+
+      score++;
+      speed += 0.2;
+
+      scoreDisplay.innerHTML = "Score: " + score;
+
+      penguin.remove();
+      clearInterval(interval);
+    }
+
+    // MISSED
+    if(pos > 350){
+      document.getElementById("failSound").play();
+
+      lives--;
+      livesDisplay.innerHTML = "Lives: " + lives;
+
+      penguin.remove();
+      clearInterval(interval);
+
+      if(lives <= 0){
+        gameOver();
+      }
+    }
+
+  }, 20);
+}
+
+// GAME OVER
+function gameOver(){
+  gameRunning = false;
+  document.getElementById("bgMusic").pause();
+  alert("Game Over! Score: " + score);
+}
+  
 /* HUG */
 #hugScreen{
   display:none;
