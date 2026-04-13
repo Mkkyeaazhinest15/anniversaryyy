@@ -18,6 +18,7 @@ body{
 .heart{
   position:fixed;
   animation:floatUp 6s linear infinite;
+  pointer-events:none;
 }
 @keyframes floatUp{
   0%{transform:translateY(100vh) scale(0);}
@@ -25,85 +26,94 @@ body{
 }
 
 /* PAGES */
-.page{display:none;opacity:0;transition:0.5s;}
+.page{display:none;opacity:0;transition:.4s;}
 .active{display:block;opacity:1;}
 
 /* BUTTON */
 button{
-  padding:12px 20px;
-  margin:10px;
+  padding:12px 18px;
+  margin:8px;
   border:none;
   border-radius:25px;
   background:linear-gradient(45deg,hotpink,#ff85a2);
   color:white;
   cursor:pointer;
 }
-button:hover{transform:scale(1.1);}
 
 /* CARDS */
 .card{
   display:inline-block;
-  padding:25px;
-  margin:15px;
+  padding:20px;
+  margin:10px;
   background:white;
   border-radius:20px;
   cursor:pointer;
+  min-width:130px;
 }
 
-/* BOOK LETTER */
+/* 📖 FIXED BOOK */
 .book{
   position:fixed;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%) scale(0);
-  width:300px;
-  height:350px;
-  display:flex;
-  perspective:1000px;
+  width:90%;
+  max-width:320px;
+  height:380px;
+  perspective:1200px;
   z-index:999;
-  transition:0.5s;
+  transition:.4s;
 }
 .book.open{
   transform:translate(-50%,-50%) scale(1);
 }
+
 .pageBook{
-  width:50%;
+  position:absolute;
+  width:100%;
   height:100%;
+  border-radius:15px;
   background:#fff0f5;
-  border-radius:10px;
-  box-shadow:0 10px 20px rgba(0,0,0,0.3);
+  box-shadow:0 15px 30px rgba(0,0,0,0.3);
+  backface-visibility:hidden;
 }
+
+/* COVER */
 .left{
-  transform-origin:right;
-  background:linear-gradient(#ffc0cb,#ff9ecb);
+  background:linear-gradient(#ff9ecb,#ffc0cb);
+  transform-origin:left;
+  z-index:2;
 }
 .book.open .left{
-  animation:openPage 0.8s forwards;
+  animation:openBook .8s forwards;
 }
-@keyframes openPage{
-  from{transform:rotateY(0);}
+@keyframes openBook{
   to{transform:rotateY(-180deg);}
 }
+
+/* PAGE CONTENT */
 .right{
-  padding:15px;
+  padding:20px;
   overflow:auto;
   font-size:14px;
+  line-height:1.5;
 }
 
 /* GAME */
 #gameArea{
   display:none;
   position:relative;
-  height:400px;
+  height:350px;
   background:white;
-  margin:20px;
+  margin:15px;
   border-radius:20px;
+  overflow:hidden;
 }
 #player{
   position:absolute;
   bottom:10px;
   left:50%;
-  font-size:40px;
+  font-size:35px;
 }
 .penguin{
   position:absolute;
@@ -114,32 +124,28 @@ button:hover{transform:scale(1.1);}
 #hugScreen{
   display:none;
   position:fixed;
-  top:0;
-  width:100%;
-  height:100%;
+  inset:0;
   background:radial-gradient(circle,#ffb6c1,#ff69b4);
   justify-content:center;
   align-items:center;
   flex-direction:column;
   color:white;
+  z-index:999;
 }
 #hugEmoji{
-  font-size:120px;
+  font-size:100px;
   animation:heartbeat 1s infinite;
 }
 @keyframes heartbeat{
-  0%{transform:scale(1);}
+  0%,100%{transform:scale(1);}
   50%{transform:scale(1.2);}
-  100%{transform:scale(1);}
 }
 
 /* END */
 #endingScreen{
   display:none;
   position:fixed;
-  top:0;
-  width:100%;
-  height:100%;
+  inset:0;
   background:linear-gradient(#ff9ecb,#ffc0cb);
   color:white;
   justify-content:center;
@@ -155,7 +161,7 @@ button:hover{transform:scale(1.1);}
 <source src="https://cdn.pixabay.com/download/audio/2023/04/19/audio_6f0c8d9c5e.mp3">
 </audio>
 
-<!-- PAGE 1 -->
+<!-- START -->
 <div id="page1" class="page active">
 <h2>Do you still love me, my Handsome Dinosaur? 🥺💖</h2>
 <button onclick="startSite()">YES 💖</button>
@@ -165,18 +171,18 @@ button:hover{transform:scale(1.1);}
 <!-- MENU -->
 <div id="cardsPage" class="page">
 <h3>Choose one 💌</h3>
-<div class="card" onclick="showLetter()">💌 Open Love Letter</div>
+<div class="card" onclick="showLetter()">💌 Letter</div>
 <div class="card" onclick="startGame()">🎮 Game</div>
-<div class="card" onclick="hugStart()">🤗 Hug Me</div>
+<div class="card" onclick="hugStart()">🤗 Hug</div>
 </div>
 
 <!-- BOOK -->
 <div id="book" class="book">
-  <div class="pageBook left"></div>
   <div class="pageBook right">
     <div id="letterText"></div>
     <button onclick="closeBook()">Close ❌</button>
   </div>
+  <div class="pageBook left"></div>
 </div>
 
 <!-- GAME -->
@@ -207,7 +213,7 @@ h.innerHTML="💖";
 h.style.left=Math.random()*100+"%";
 document.body.appendChild(h);
 setTimeout(()=>h.remove(),6000);
-},500);
+},600);
 
 // START
 function startSite(){
@@ -219,11 +225,11 @@ cardsPage.classList.add("active");
 // RUN BUTTON
 function runAway(){
 noBtn.style.position="absolute";
-noBtn.style.left=Math.random()*90+"%";
-noBtn.style.top=Math.random()*90+"%";
+noBtn.style.left=Math.random()*80+"%";
+noBtn.style.top=Math.random()*80+"%";
 }
 
-// BOOK LETTER
+// LETTER
 function showLetter(){
 book.classList.add("open");
 
@@ -247,28 +253,39 @@ letterText.innerHTML="";
 function type(){
 if(i<text.length){
 letterText.innerHTML+=text[i++];
-setTimeout(type,20);
+setTimeout(type,18);
 }}
 type();
 }
-function closeBook(){book.classList.remove("open");}
+function closeBook(){
+book.classList.remove("open");
+letterText.innerHTML="";
+}
 
-// GAME
+/* GAME */
 let score=0,running=false;
+
 function startGame(){
 gameArea.style.display="block";
 score=0;
 running=true;
 updateScore();
 }
+
 function updateScore(){
 scoreDisplay.innerHTML="Score: "+score;
 }
+
 document.addEventListener("mousemove",e=>{
 player.style.left=(e.clientX-20)+"px";
 });
+document.addEventListener("touchmove",e=>{
+player.style.left=(e.touches[0].clientX-20)+"px";
+});
+
 setInterval(()=>{
 if(!running)return;
+
 let p=document.createElement("div");
 p.className="penguin";
 p.innerHTML="🐧";
@@ -282,7 +299,9 @@ let pr=player.getBoundingClientRect();
 let rr=p.getBoundingClientRect();
 
 if(rr.bottom>=pr.top && rr.left<pr.right && rr.right>pr.left){
-score++;updateScore();p.remove();clearInterval(fall);
+score++;updateScore();
+p.remove();clearInterval(fall);
+
 if(score==5){
 running=false;
 gameArea.style.display="none";
@@ -290,16 +309,18 @@ endingScreen.style.display="flex";
 }
 }
 
-if(p.offsetTop>400){p.remove();clearInterval(fall);}
+if(p.offsetTop>350){
+p.remove();clearInterval(fall);
+}
 },30);
+
 },800);
 
-// HUG
+/* HUG */
 let holdTimer;
 
 function hugStart(){
 hugScreen.style.display="flex";
-
 document.body.addEventListener("mousedown",startHold);
 document.body.addEventListener("mouseup",endHold);
 document.body.addEventListener("touchstart",startHold);
@@ -308,18 +329,13 @@ document.body.addEventListener("touchend",endHold);
 
 function startHold(){
 hugText.innerHTML="Hugging you tighter... 🥺💖";
-
-if(navigator.vibrate){
-navigator.vibrate([100,50,100]);
-}
-
-holdTimer=setInterval(()=>spawnHearts(),200);
+if(navigator.vibrate) navigator.vibrate([100,50,100]);
+holdTimer=setInterval(spawnHearts,200);
 }
 
 function endHold(){
 clearInterval(holdTimer);
 hugText.innerHTML="I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖";
-
 setTimeout(()=>hugScreen.style.display="none",1500);
 }
 
