@@ -14,10 +14,11 @@ body{
   overflow:hidden;
 }
 
-/* FLOAT HEARTS */
+/* FLOATING HEARTS */
 .heart{
   position:fixed;
   animation:floatUp 6s linear infinite;
+  pointer-events:none;
 }
 @keyframes floatUp{
   0%{transform:translateY(100vh) scale(0);}
@@ -25,9 +26,10 @@ body{
 }
 
 /* PAGES */
-.page{display:none;}
-.active{display:block;}
+.page{display:none;opacity:0;transition:.4s;}
+.active{display:block;opacity:1;}
 
+/* BUTTON */
 button{
   padding:12px 18px;
   margin:8px;
@@ -38,6 +40,7 @@ button{
   cursor:pointer;
 }
 
+/* CARDS */
 .card{
   display:inline-block;
   padding:20px;
@@ -45,9 +48,10 @@ button{
   background:white;
   border-radius:20px;
   cursor:pointer;
+  min-width:130px;
 }
 
-/* BOOK */
+/* 📖 FIXED BOOK */
 .book{
   position:fixed;
   top:50%;
@@ -56,52 +60,64 @@ button{
   width:90%;
   max-width:320px;
   height:380px;
+  perspective:1200px;
   z-index:999;
   transition:.4s;
 }
-.book.open{ transform:translate(-50%,-50%) scale(1); }
+.book.open{
+  transform:translate(-50%,-50%) scale(1);
+}
+
 .pageBook{
   position:absolute;
   width:100%;
   height:100%;
-  background:#fff0f5;
   border-radius:15px;
+  background:#fff0f5;
+  box-shadow:0 15px 30px rgba(0,0,0,0.3);
+  backface-visibility:hidden;
 }
-.right{ padding:20px; overflow:auto; }
+
+/* COVER */
+.left{
+  background:linear-gradient(#ff9ecb,#ffc0cb);
+  transform-origin:left;
+  z-index:2;
+}
+.book.open .left{
+  animation:openBook .8s forwards;
+}
+@keyframes openBook{
+  to{transform:rotateY(-180deg);}
+}
+
+/* PAGE CONTENT */
+.right{
+  padding:20px;
+  overflow:auto;
+  font-size:14px;
+  line-height:1.5;
+}
 
 /* GAME */
 #gameArea{
+  display:none;
   position:relative;
   height:350px;
-  width:300px;
   background:white;
-  margin:15px auto;
+  margin:15px;
   border-radius:20px;
   overflow:hidden;
-  border:3px solid black;
-  display:none;
 }
 #player{
   position:absolute;
   bottom:10px;
   left:50%;
-  transform:translateX(-50%);
   font-size:35px;
 }
 .penguin{
   position:absolute;
   top:0;
-  font-size:30px;
-}
-
-/* SHOP */
-#shop{
-  display:none;
-  background:white;
-  padding:10px;
-  border-radius:15px;
-  margin:auto;
-  width:250px;
 }
 
 /* HUG */
@@ -114,11 +130,36 @@ button{
   align-items:center;
   flex-direction:column;
   color:white;
+  z-index:999;
+}
+#hugEmoji{
+  font-size:100px;
+  animation:heartbeat 1s infinite;
+}
+@keyframes heartbeat{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.2);}
+}
+
+/* END */
+#endingScreen{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:linear-gradient(#ff9ecb,#ffc0cb);
+  color:white;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
 }
 </style>
 </head>
 
 <body>
+
+<audio id="bgMusic" loop>
+<source src="https://cdn.pixabay.com/download/audio/2023/04/19/audio_6f0c8d9c5e.mp3">
+</audio>
 
 <!-- START -->
 <div id="page1" class="page active">
@@ -135,101 +176,31 @@ button{
 <div class="card" onclick="hugStart()">🤗 Hug</div>
 </div>
 
-<!-- LETTER -->
+<!-- BOOK -->
 <div id="book" class="book">
   <div class="pageBook right">
-    <div id="letterText">
-
-Hi my Handsomest Dinosaur 🦖💖<br><br>
-
-I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖<br><br>
-
-Like… not just a normal “I love you.”<br>
-I’m talking about the kind of love that feels like it stretches across galaxies,<br>
-the kind that doesn’t run out, doesn’t fade,<br>
-and only grows bigger and bigger every single day.<br><br>
-
-You are literally my favorite person in this entire universe.<br>
-Out of billions of people, ikaw yung pinili ng puso ko—<br>
-and I would choose you again and again,<br>
-in every lifetime, in every version of reality, in every possible world.<br><br>
-
-You make my days softer, lighter, and so much brighter.<br>
-Even the smallest things—your messages, your presence, your voice—<br>
-they mean EVERYTHING to me.<br>
-Parang kahit simpleng moment lang,<br>
-nagiging special basta ikaw yung kasama ko 🥺💗<br><br>
-
-You are my comfort when everything feels heavy,<br>
-my peace when my mind is too loud,<br>
-my safe place when the world feels too much.<br><br>
-
-And honestly?<br>
-I still get that same feeling every time I think about you—<br>
-butterflies, kilig, happiness…<br>
-like my heart is smiling in ways I can’t even explain.<br><br>
-
-I love the way you are.<br>
-Your little habits, your personality,<br>
-even the things you don’t notice about yourself—<br>
-I notice them, and I love every single part of you.<br><br>
-
-You’re not just someone I love…<br>
-you’re someone I treasure deeply.<br><br>
-
-If I could hug you right now,<br>
-I would never let go.<br>
-Like EVER.<br>
-As in forever na yakap.<br>
-No returns. No breaks. No escape 😤💖<br><br>
-
-And if one day everything feels hard,<br>
-I hope you remember this:<br>
-you have me.<br>
-Always.<br>
-No matter what happens,<br>
-no matter how far, how busy, or how messy things get—<br>
-I will still choose you.<br><br>
-
-Again.<br>
-And again.<br>
-And again.<br>
-Without hesitation.<br><br>
-
-Because loving you is the easiest,<br>
-most natural,<br>
-most beautiful thing I’ve ever felt.<br><br>
-
-I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖<br><br>
-
-Forever yours,<br>
-your little ms. lagtok 💖
-
-    </div>
+    <div id="letterText"></div>
     <button onclick="closeBook()">Close ❌</button>
   </div>
+  <div class="pageBook left"></div>
 </div>
 
 <!-- GAME -->
 <div id="gameArea">
 <h3 id="scoreDisplay">Score: 0</h3>
-<div id="player">🧺</div>
-</div>
-
-<!-- SHOP -->
-<div id="shop">
-<h3>🛒 Shop</h3>
-<button onclick="buySkin('🦖',5)">🦖 Dino (5)</button>
-<button onclick="buySkin('🐻',10)">🐻 Bear (10)</button>
-<button onclick="buySkin('🐱',15)">🐱 Cat (15)</button>
-<p id="coinsDisplay">Coins: 0</p>
-<button onclick="closeShop()">Close</button>
+<div id="player">🦖</div>
 </div>
 
 <!-- HUG -->
 <div id="hugScreen">
-<h1>🫂</h1>
+<h1 id="hugEmoji">🫂</h1>
 <p id="hugText">Hold to feel my hug 🥺💖</p>
+</div>
+
+<!-- END -->
+<div id="endingScreen">
+<h1>I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖</h1>
+<button onclick="location.reload()">Restart</button>
 </div>
 
 <script>
@@ -244,149 +215,189 @@ document.body.appendChild(h);
 setTimeout(()=>h.remove(),6000);
 },600);
 
-/* NAV */
+// START
 function startSite(){
+bgMusic.play().catch(()=>{});
 page1.classList.remove("active");
 cardsPage.classList.add("active");
 }
+
+// RUN BUTTON
 function runAway(){
 noBtn.style.position="absolute";
 noBtn.style.left=Math.random()*80+"%";
 noBtn.style.top=Math.random()*80+"%";
 }
 
-/* LETTER */
-function showLetter(){ book.classList.add("open"); }
-function closeBook(){ book.classList.remove("open"); }
+// LETTER
+function showLetter(){
+book.classList.add("open");
+
+let text=`Hi my Handsomest Dinosaur 🦖💖
+
+I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖
+
+Like… not just a normal “I love you.”
+I’m talking about the kind of love that feels like it stretches across galaxies,
+the kind that doesn’t run out, doesn’t fade,
+and only grows bigger and bigger every single day.
+
+You are literally my favorite person in this entire universe.
+Out of billions of people, ikaw yung pinili ng puso ko—
+and I would choose you again and again,
+in every lifetime, in every version of reality, in every possible world.
+
+You make my days softer, lighter, and so much brighter.
+Even the smallest things—your messages, your presence, your voice—
+they mean EVERYTHING to me.
+Parang kahit simpleng moment lang,
+nagiging special basta ikaw yung kasama ko 🥺💗
+
+You are my comfort when everything feels heavy,
+my peace when my mind is too loud,
+my safe place when the world feels too much.
+
+And honestly?
+I still get that same feeling every time I think about you—
+butterflies, kilig, happiness…
+like my heart is smiling in ways I can’t even explain.
+
+I love the way you are.
+Your little habits, your personality,
+even the things you don’t notice about yourself—
+I notice them, and I love every single part of you.
+
+You’re not just someone I love…
+you’re someone I treasure deeply.
+
+If I could hug you right now,
+I would never let go.
+Like EVER.
+As in forever na yakap.
+No returns. No breaks. No escape 😤💖
+
+And if one day everything feels hard,
+I hope you remember this:
+you have me.
+Always.
+No matter what happens,
+no matter how far, how busy, or how messy things get—
+I will still choose you.
+
+Again.
+And again.
+And again.
+Without hesitation.
+
+Because loving you is the easiest,
+most natural,
+most beautiful thing I’ve ever felt.
+
+I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖
+
+Forever yours,
+your little ms. lagtok 💖`;
+
+let i=0;
+letterText.innerHTML="";
+function type(){
+if(i<text.length){
+letterText.innerHTML+=text[i++];
+setTimeout(type,18);
+}}
+type();
+}
+function closeBook(){
+book.classList.remove("open");
+letterText.innerHTML="";
+}
 
 /* GAME */
-let score=0,running=false,level=1,target=5,speed=5,coins=0,currentSkin="🧺";
+let score=0,running=false;
 
 function startGame(){
 gameArea.style.display="block";
-score=0;level=1;target=5;speed=5;coins=0;
-running=true;updateUI();showLevel();
+score=0;
+running=true;
+updateScore();
 }
 
-function updateUI(){
-scoreDisplay.innerHTML="Level "+level+" | "+score+"/"+target;
-coinsDisplay.innerHTML="Coins: "+coins;
-player.innerHTML=currentSkin;
-}
-
-function showLevel(){
-let lvl=document.createElement("div");
-lvl.innerHTML="LEVEL "+level+" 💖";
-lvl.style.cssText="position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);font-size:40px;color:white;";
-document.body.appendChild(lvl);
-setTimeout(()=>lvl.remove(),1000);
+function updateScore(){
+scoreDisplay.innerHTML="Score: "+score;
 }
 
 document.addEventListener("mousemove",e=>{
-player.style.left=(e.clientX-40)+"px";
+player.style.left=(e.clientX-20)+"px";
+});
+document.addEventListener("touchmove",e=>{
+player.style.left=(e.touches[0].clientX-20)+"px";
 });
 
 setInterval(()=>{
 if(!running)return;
 
-let item=document.createElement("div");
-item.className="penguin";
-let type=Math.random();
-
-item.innerHTML = type<0.7 ? "🐧" : "💣";
-item.dataset.type = type<0.7 ? "good":"bad";
-
-item.style.left=Math.random()*260+"px";
-gameArea.appendChild(item);
+let p=document.createElement("div");
+p.className="penguin";
+p.innerHTML="🐧";
+p.style.left=Math.random()*90+"%";
+gameArea.appendChild(p);
 
 let fall=setInterval(()=>{
-item.style.top=(item.offsetTop+speed)+"px";
+p.style.top=(p.offsetTop+5)+"px";
 
 let pr=player.getBoundingClientRect();
-let rr=item.getBoundingClientRect();
+let rr=p.getBoundingClientRect();
 
 if(rr.bottom>=pr.top && rr.left<pr.right && rr.right>pr.left){
+score++;updateScore();
+p.remove();clearInterval(fall);
 
-if(item.dataset.type==="good"){
-score++;coins++;updateUI();
-}else{
+if(score==5){
 running=false;
-alert("💣 Oh no!");
-gameOver();
+gameArea.style.display="none";
+endingScreen.style.display="flex";
+}
 }
 
-item.remove();clearInterval(fall);
-
-if(score>=target){ nextLevel(); }
+if(p.offsetTop>350){
+p.remove();clearInterval(fall);
 }
-
-if(item.offsetTop>350){ item.remove();clearInterval(fall); }
-
 },30);
 
 },800);
 
-function nextLevel(){
-running=false;
-coins+=5;
-
-setTimeout(()=>{
-level++;score=0;target+=3;speed+=2;
-
-if(level>3){ finalReward(); return; }
-
-running=true;updateUI();showLevel();
-
-},1500);
-}
-
-function finalReward(){
-gameArea.style.display="none";
-running=false;
-
-let end=document.createElement("div");
-end.style.cssText="position:fixed;inset:0;background:linear-gradient(#ff9ecb,#ffc0cb);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;";
-
-end.innerHTML=`
-<h1>🎁 UNLIMITED SWEETNESS VOUCHER 💖</h1>
-<p>Unlimited lambing forever 😤💖</p>
-<div style="font-size:50px;">🐧💔</div>
-<p>Even the penguin got lost without you 😭</p>
-<p>You earned ${coins} coins 🪙</p>
-<button onclick="claimReward()">CLAIM 💖</button>
-`;
-
-document.body.appendChild(end);
-}
-
-function claimReward(){
-document.querySelectorAll("#gameArea,#shop").forEach(e=>e.style.display="none");
-cardsPage.classList.add("active");
-alert("Voucher claimed 😤💖");
-}
-
-/* SHOP */
-function buySkin(skin,price){
-if(coins>=price){
-coins-=price;
-currentSkin=skin;
-updateUI();
-alert("Purchased 💖");
-}else alert("Not enough coins 😭");
-}
-function closeShop(){ shop.style.display="none"; }
-
-/* GAME OVER */
-function gameOver(){
-gameArea.style.display="none";
-alert("Game Over 💔");
-}
-
 /* HUG */
+let holdTimer;
+
 function hugStart(){
 hugScreen.style.display="flex";
-document.body.onmousedown=()=>hugText.innerHTML="Hugging you tighter 💖";
-document.body.onmouseup=()=>hugScreen.style.display="none";
+document.body.addEventListener("mousedown",startHold);
+document.body.addEventListener("mouseup",endHold);
+document.body.addEventListener("touchstart",startHold);
+document.body.addEventListener("touchend",endHold);
+}
+
+function startHold(){
+hugText.innerHTML="Hugging you tighter... 🥺💖";
+if(navigator.vibrate) navigator.vibrate([100,50,100]);
+holdTimer=setInterval(spawnHearts,200);
+}
+
+function endHold(){
+clearInterval(holdTimer);
+hugText.innerHTML="I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖";
+setTimeout(()=>hugScreen.style.display="none",1500);
+}
+
+function spawnHearts(){
+let h=document.createElement("div");
+h.innerHTML="💖";
+h.style.position="fixed";
+h.style.left=Math.random()*100+"%";
+h.style.top="100%";
+h.style.animation="floatUp 3s linear";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),3000);
 }
 
 </script>
