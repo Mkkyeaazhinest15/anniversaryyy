@@ -259,12 +259,11 @@ noBtn.style.top=Math.random()*80+"%";
 function showLetter(){ book.classList.add("open"); }
 function closeBook(){ book.classList.remove("open"); }
 
-/* GAME SYSTEM */
+/* GAME */
 let score=0,running=false,level=1,target=5,speed=5,coins=0,currentSkin="🧺";
 
 function startGame(){
 gameArea.style.display="block";
-shop.style.display="none";
 score=0;level=1;target=5;speed=5;coins=0;
 running=true;updateUI();showLevel();
 }
