@@ -14,28 +14,16 @@ body{
   overflow:hidden;
 }
 
-/* FLOATING HEARTS */
-.heart{
-  position:fixed;
-  animation:floatUp 6s linear infinite;
-  pointer-events:none;
-}
-@keyframes floatUp{
-  0%{transform:translateY(100vh) scale(0);}
-  100%{transform:translateY(-10vh) scale(1.5);}
-}
-
 /* PAGES */
-.page{display:none;opacity:0;transition:.4s;}
-.active{display:block;opacity:1;}
+.page{display:none;}
+.active{display:block;}
 
-/* BUTTON */
 button{
   padding:12px 18px;
   margin:8px;
   border:none;
   border-radius:25px;
-  background:linear-gradient(45deg,hotpink,#ff85a2);
+  background:hotpink;
   color:white;
   cursor:pointer;
 }
@@ -48,356 +36,261 @@ button{
   background:white;
   border-radius:20px;
   cursor:pointer;
-  min-width:130px;
-}
-
-/* 📖 FIXED BOOK */
-.book{
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%) scale(0);
-  width:90%;
-  max-width:320px;
-  height:380px;
-  perspective:1200px;
-  z-index:999;
-  transition:.4s;
-}
-.book.open{
-  transform:translate(-50%,-50%) scale(1);
-}
-
-.pageBook{
-  position:absolute;
-  width:100%;
-  height:100%;
-  border-radius:15px;
-  background:#fff0f5;
-  box-shadow:0 15px 30px rgba(0,0,0,0.3);
-  backface-visibility:hidden;
-}
-
-/* COVER */
-.left{
-  background:linear-gradient(#ff9ecb,#ffc0cb);
-  transform-origin:left;
-  z-index:2;
-}
-.book.open .left{
-  animation:openBook .8s forwards;
-}
-@keyframes openBook{
-  to{transform:rotateY(-180deg);}
-}
-
-/* PAGE CONTENT */
-.right{
-  padding:20px;
-  overflow:auto;
-  font-size:14px;
-  line-height:1.5;
 }
 
 /* GAME */
-#gameArea{
+#game{
   display:none;
-  position:relative;
-  height:350px;
+  height:320px;
+  width:300px;
   background:white;
-  margin:15px;
+  margin:20px auto;
   border-radius:20px;
+  position:relative;
   overflow:hidden;
 }
 #player{
   position:absolute;
   bottom:10px;
   left:50%;
+  transform:translateX(-50%);
   font-size:35px;
 }
-.penguin{
+.item{
   position:absolute;
   top:0;
+  font-size:28px;
 }
 
-/* HUG */
-#hugScreen{
+/* ENVELOPE */
+#envelope{
   display:none;
   position:fixed;
   inset:0;
-  background:radial-gradient(circle,#ffb6c1,#ff69b4);
+  background:#ffc0cb;
   justify-content:center;
   align-items:center;
   flex-direction:column;
-  color:white;
-  z-index:999;
 }
-#hugEmoji{
-  font-size:100px;
-  animation:heartbeat 1s infinite;
+#envelopeBox{
+  width:250px;
+  height:150px;
+  background:#ff69b4;
+  position:relative;
+  cursor:pointer;
 }
-@keyframes heartbeat{
-  0%,100%{transform:scale(1);}
-  50%{transform:scale(1.2);}
+#flap{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:#ff85a2;
+  transform-origin:top;
+  transition:.6s;
+}
+.open #flap{
+  transform:rotateX(180deg);
 }
 
-/* END */
-#endingScreen{
+/* LETTER */
+#letter{
   display:none;
-  position:fixed;
-  inset:0;
-  background:linear-gradient(#ff9ecb,#ffc0cb);
-  color:white;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
+  background:white;
+  padding:20px;
+  border-radius:20px;
+  width:80%;
+  max-width:320px;
+  height:350px;
+  overflow:auto;
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<audio id="bgMusic" loop>
-<source src="https://cdn.pixabay.com/download/audio/2023/04/19/audio_6f0c8d9c5e.mp3">
-</audio>
-
-<!-- START -->
 <div id="page1" class="page active">
 <h2>Do you still love me, my Handsome Dinosaur? 🥺💖</h2>
-<button onclick="startSite()">YES 💖</button>
+<button onclick="start()">YES 💖</button>
 <button id="noBtn" onmouseover="runAway()">NO 😭</button>
 </div>
 
-<!-- MENU -->
-<div id="cardsPage" class="page">
-<h3>Choose one 💌</h3>
-<div class="card" onclick="showLetter()">💌 Letter</div>
-<div class="card" onclick="startGame()">🎮 Game</div>
-<div class="card" onclick="hugStart()">🤗 Hug</div>
+<div id="cards" class="page">
+<h3>Choose your surprise 💖</h3>
+
+<div class="card" onclick="alert('Happy Anniversary my love 💖')">
+💌 Happy Anniversary
 </div>
 
-<!-- BOOK -->
-<div id="book" class="book">
-  <div class="pageBook right">
-    <div id="letterText"></div>
-    <button onclick="closeBook()">Close ❌</button>
-  </div>
-  <div class="pageBook left"></div>
+<div class="card" onclick="claimVoucher()">
+💖 Unlimited Kiss & Hug
 </div>
 
-<!-- GAME -->
-<div id="gameArea">
-<h3 id="scoreDisplay">Score: 0</h3>
-<div id="player">🦖</div>
+<div class="card" onclick="claimVoucher()">
+🌹 Date With Me Invitation
 </div>
 
-<!-- HUG -->
-<div id="hugScreen">
-<h1 id="hugEmoji">🫂</h1>
-<p id="hugText">Hold to feel my hug 🥺💖</p>
 </div>
 
-<!-- END -->
-<div id="endingScreen">
-<h1>I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖</h1>
-<button onclick="location.reload()">Restart</button>
+<div id="game">
+<h3 id="scoreText">Score: 0</h3>
+<div id="player">🧺</div>
+</div>
+
+<div id="envelope">
+<div id="envelopeBox" onclick="openEnvelope()">
+<div id="flap"></div>
+</div>
+
+<div id="letter">
+<h3>💌 For you...</h3>
+
+<p>
+Hi my Handsomest Dinosaur 🦖💖<br><br>
+
+I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖<br><br>
+
+Like… not just a normal “I love you.”<br>
+I’m talking about the kind of love that feels like it stretches across galaxies,<br>
+the kind that doesn’t run out, doesn’t fade,<br>
+and only grows bigger and bigger every single day.<br><br>
+
+You are literally my favorite person in this entire universe.<br>
+Out of billions of people, ikaw yung pinili ng puso ko—<br>
+and I would choose you again and again,<br>
+in every lifetime, in every version of reality, in every possible world.<br><br>
+
+You make my days softer, lighter, and so much brighter.<br>
+Even the smallest things—your messages, your presence, your voice—<br>
+they mean EVERYTHING to me.<br><br>
+
+You are my comfort when everything feels heavy,<br>
+my peace when my mind is too loud,<br>
+my safe place when the world feels too much.<br><br>
+
+And honestly?<br>
+I still get that same feeling every time I think about you—<br>
+butterflies, kilig, happiness…<br>
+like my heart is smiling in ways I can’t even explain.<br><br>
+
+I love the way you are.<br>
+Your little habits, your personality,<br>
+even the things you don’t notice about yourself—<br>
+I notice them, and I love every single part of you.<br><br>
+
+You’re not just someone I love…<br>
+you’re someone I treasure deeply.<br><br>
+
+If I could hug you right now,<br>
+I would never let go.<br>
+Like EVER.<br>
+As in forever na yakap.<br>
+No returns. No breaks. No escape 😤💖<br><br>
+
+And if one day everything feels hard,<br>
+I hope you remember this:<br>
+you have me.<br>
+Always.<br>
+No matter what happens,<br>
+no matter how far, how busy, or how messy things get—<br>
+I will still choose you.<br><br>
+
+Again.<br>
+And again.<br>
+And again.<br>
+Without hesitation.<br><br>
+
+Because loving you is the easiest,<br>
+most natural,<br>
+most beautiful thing I’ve ever felt.<br><br>
+
+I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖<br><br>
+
+Forever yours,<br>
+your little ms. lagtok 💖
+</p>
+
+<button onclick="exitSite()">Exit 💖</button>
+
+</div>
 </div>
 
 <script>
 
-/* FLOAT HEARTS */
-setInterval(()=>{
-let h=document.createElement("div");
-h.className="heart";
-h.innerHTML="💖";
-h.style.left=Math.random()*100+"%";
-document.body.appendChild(h);
-setTimeout(()=>h.remove(),6000);
-},600);
-
-// START
-function startSite(){
-bgMusic.play().catch(()=>{});
+function start(){
 page1.classList.remove("active");
-cardsPage.classList.add("active");
+cards.classList.add("active");
 }
 
-// RUN BUTTON
 function runAway(){
 noBtn.style.position="absolute";
 noBtn.style.left=Math.random()*80+"%";
 noBtn.style.top=Math.random()*80+"%";
 }
 
-// LETTER
-function showLetter(){
-book.classList.add("open");
-
-let text=`Hi my Handsomest Dinosaur 🦖💖
-
-I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖
-
-Like… not just a normal “I love you.”
-I’m talking about the kind of love that feels like it stretches across galaxies,
-the kind that doesn’t run out, doesn’t fade,
-and only grows bigger and bigger every single day.
-
-You are literally my favorite person in this entire universe.
-Out of billions of people, ikaw yung pinili ng puso ko—
-and I would choose you again and again,
-in every lifetime, in every version of reality, in every possible world.
-
-You make my days softer, lighter, and so much brighter.
-Even the smallest things—your messages, your presence, your voice—
-they mean EVERYTHING to me.
-Parang kahit simpleng moment lang,
-nagiging special basta ikaw yung kasama ko 🥺💗
-
-You are my comfort when everything feels heavy,
-my peace when my mind is too loud,
-my safe place when the world feels too much.
-
-And honestly?
-I still get that same feeling every time I think about you—
-butterflies, kilig, happiness…
-like my heart is smiling in ways I can’t even explain.
-
-I love the way you are.
-Your little habits, your personality,
-even the things you don’t notice about yourself—
-I notice them, and I love every single part of you.
-
-You’re not just someone I love…
-you’re someone I treasure deeply.
-
-If I could hug you right now,
-I would never let go.
-Like EVER.
-As in forever na yakap.
-No returns. No breaks. No escape 😤💖
-
-And if one day everything feels hard,
-I hope you remember this:
-you have me.
-Always.
-No matter what happens,
-no matter how far, how busy, or how messy things get—
-I will still choose you.
-
-Again.
-And again.
-And again.
-Without hesitation.
-
-Because loving you is the easiest,
-most natural,
-most beautiful thing I’ve ever felt.
-
-I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖
-
-Forever yours,
-your little ms. lagtok 💖`;
-
-let i=0;
-letterText.innerHTML="";
-function type(){
-if(i<text.length){
-letterText.innerHTML+=text[i++];
-setTimeout(type,18);
-}}
-type();
+let claimed=0;
+function claimVoucher(){
+claimed++;
+if(claimed>=2){
+startGame();
 }
-function closeBook(){
-book.classList.remove("open");
-letterText.innerHTML="";
 }
 
-/* GAME */
-let score=0,running=false;
+let score=0;
 
 function startGame(){
-gameArea.style.display="block";
-score=0;
-running=true;
-updateScore();
-}
-
-function updateScore(){
-scoreDisplay.innerHTML="Score: "+score;
-}
+cards.classList.remove("active");
+game.style.display="block";
 
 document.addEventListener("mousemove",e=>{
-player.style.left=(e.clientX-20)+"px";
-});
-document.addEventListener("touchmove",e=>{
-player.style.left=(e.touches[0].clientX-20)+"px";
+player.style.left=(e.clientX-40)+"px";
 });
 
 setInterval(()=>{
-if(!running)return;
-
-let p=document.createElement("div");
-p.className="penguin";
-p.innerHTML="🐧";
-p.style.left=Math.random()*90+"%";
-gameArea.appendChild(p);
+let item=document.createElement("div");
+item.className="item";
+item.innerHTML="💖";
+item.style.left=Math.random()*260+"px";
+game.appendChild(item);
 
 let fall=setInterval(()=>{
-p.style.top=(p.offsetTop+5)+"px";
+item.style.top=(item.offsetTop+5)+"px";
 
 let pr=player.getBoundingClientRect();
-let rr=p.getBoundingClientRect();
+let rr=item.getBoundingClientRect();
 
 if(rr.bottom>=pr.top && rr.left<pr.right && rr.right>pr.left){
-score++;updateScore();
-p.remove();clearInterval(fall);
+score++;
+scoreText.innerHTML="Score: "+score;
+item.remove();
+clearInterval(fall);
 
-if(score==5){
-running=false;
-gameArea.style.display="none";
-endingScreen.style.display="flex";
+if(score>=10){
+winGame();
 }
 }
 
-if(p.offsetTop>350){
-p.remove();clearInterval(fall);
+if(item.offsetTop>320){
+item.remove();
+clearInterval(fall);
 }
+
 },30);
 
 },800);
-
-/* HUG */
-let holdTimer;
-
-function hugStart(){
-hugScreen.style.display="flex";
-document.body.addEventListener("mousedown",startHold);
-document.body.addEventListener("mouseup",endHold);
-document.body.addEventListener("touchstart",startHold);
-document.body.addEventListener("touchend",endHold);
 }
 
-function startHold(){
-hugText.innerHTML="Hugging you tighter... 🥺💖";
-if(navigator.vibrate) navigator.vibrate([100,50,100]);
-holdTimer=setInterval(spawnHearts,200);
+function winGame(){
+game.style.display="none";
+envelope.style.display="flex";
 }
 
-function endHold(){
-clearInterval(holdTimer);
-hugText.innerHTML="I LOVE YOU SAUR MUCH TO INFINITY AND BEYOND ♾️🚀💖";
-setTimeout(()=>hugScreen.style.display="none",1500);
+function openEnvelope(){
+envelopeBox.classList.add("open");
+setTimeout(()=>letter.style.display="block",500);
 }
 
-function spawnHearts(){
-let h=document.createElement("div");
-h.innerHTML="💖";
-h.style.position="fixed";
-h.style.left=Math.random()*100+"%";
-h.style.top="100%";
-h.style.animation="floatUp 3s linear";
-document.body.appendChild(h);
-setTimeout(()=>h.remove(),3000);
+function exitSite(){
+location.reload();
 }
 
 </script>
