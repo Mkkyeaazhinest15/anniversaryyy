@@ -28,14 +28,49 @@ button{
   cursor:pointer;
 }
 
-/* CARDS */
-.card{
+/* FLIP CARDS */
+.flip-card{
+  background:transparent;
+  width:120px;
+  height:120px;
   display:inline-block;
-  padding:20px;
   margin:10px;
-  background:white;
+  perspective:1000px;
+}
+
+.flip-inner{
+  position:relative;
+  width:100%;
+  height:100%;
+  transition:transform 0.6s;
+  transform-style:preserve-3d;
+}
+
+.flip-card:hover .flip-inner{
+  transform:rotateY(180deg);
+}
+
+.flip-front, .flip-back{
+  position:absolute;
+  width:100%;
+  height:100%;
+  backface-visibility:hidden;
   border-radius:20px;
-  cursor:pointer;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  padding:10px;
+}
+
+.flip-front{
+  background:white;
+}
+
+.flip-back{
+  background:hotpink;
+  color:white;
+  transform:rotateY(180deg);
 }
 
 /* GAME */
@@ -108,34 +143,47 @@ button{
 
 <body>
 
+<!-- PAGE 1 -->
 <div id="page1" class="page active">
 <h2>Do you still love me, my Handsome Dinosaur? 🥺💖</h2>
 <button onclick="start()">YES 💖</button>
 <button id="noBtn" onmouseover="runAway()">NO 😭</button>
 </div>
 
+<!-- CARDS -->
 <div id="cards" class="page">
 <h3>Choose your surprise 💖</h3>
 
-<div class="card" onclick="alert('Happy Anniversary my love 💖')">
-💌 Happy Anniversary
+<div class="flip-card" onclick="alert('Happy Anniversary my love 💖')">
+  <div class="flip-inner">
+    <div class="flip-front">💌<br>Anniversary</div>
+    <div class="flip-back">Happy Anniversary 💖</div>
+  </div>
 </div>
 
-<div class="card" onclick="claimVoucher()">
-💖 Unlimited Kiss & Hug
+<div class="flip-card" onclick="claimVoucher()">
+  <div class="flip-inner">
+    <div class="flip-front">💖<br>Kiss & Hug</div>
+    <div class="flip-back">CLAIM 💖</div>
+  </div>
 </div>
 
-<div class="card" onclick="claimVoucher()">
-🌹 Date With Me Invitation
+<div class="flip-card" onclick="claimVoucher()">
+  <div class="flip-inner">
+    <div class="flip-front">🌹<br>Date</div>
+    <div class="flip-back">CLAIM 🌹</div>
+  </div>
 </div>
 
 </div>
 
+<!-- GAME -->
 <div id="game">
 <h3 id="scoreText">Score: 0</h3>
 <div id="player">🧺</div>
 </div>
 
+<!-- ENVELOPE -->
 <div id="envelope">
 <div id="envelopeBox" onclick="openEnvelope()">
 <div id="flap"></div>
