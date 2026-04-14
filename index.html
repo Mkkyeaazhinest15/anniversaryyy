@@ -46,7 +46,7 @@ button{
   transform-style:preserve-3d;
 }
 
-.flip-card:hover .flip-inner{
+.flip-card.flip .flip-inner{
   transform:rotateY(180deg);
 }
 
@@ -154,21 +154,21 @@ button{
 <div id="cards" class="page">
 <h3>Choose your surprise 💖</h3>
 
-<div class="flip-card" onclick="alert('Happy Anniversary my love 💖')">
+<div class="flip-card" onclick="flipCard(this); anniversaryClick()">
   <div class="flip-inner">
     <div class="flip-front">💌<br>Anniversary</div>
     <div class="flip-back">Happy Anniversary 💖</div>
   </div>
 </div>
 
-<div class="flip-card" onclick="claimVoucher()">
+<div class="flip-card" onclick="flipCard(this); claimVoucher()">
   <div class="flip-inner">
     <div class="flip-front">💖<br>Kiss & Hug</div>
     <div class="flip-back">CLAIM 💖</div>
   </div>
 </div>
 
-<div class="flip-card" onclick="claimVoucher()">
+<div class="flip-card" onclick="flipCard(this); claimVoucher()">
   <div class="flip-inner">
     <div class="flip-front">🌹<br>Date</div>
     <div class="flip-back">CLAIM 🌹</div>
@@ -273,6 +273,15 @@ function runAway(){
 noBtn.style.position="absolute";
 noBtn.style.left=Math.random()*80+"%";
 noBtn.style.top=Math.random()*80+"%";
+}
+
+/* TAP FLIP */
+function flipCard(card){
+  card.classList.toggle("flip");
+}
+
+function anniversaryClick(){
+  alert("Happy Anniversary my love 💖");
 }
 
 let claimed=0;
